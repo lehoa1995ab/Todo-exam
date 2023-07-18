@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+<script>
+    function deleteTodo(todoId) {
+        console.log("todoId", todoId)
+        fetch('http://localhost:3000/api/v1/todos/' + todoId, {
+            method: 'DELETE'
+        })
+            .then(response => {
+                response.json()
+                if (response.status == 200) {
+                    window.location.reload();
+                }
+            })
+            .then(response => {
+                console.log("response", response)
+            })
+    }
+    function changeTodo(event, todoId) {
+        fetch('http://localhost:3000/api/v1/todos/' + todoId, {
+            method: 'PATCH',
+            body: JSON.stringify({
+                completed: event.target.checked
+            }),
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8'
+            }
+        })
+            .then(response => {
+                console.log("response event.target.checked", event.target.parentElement.parentElement.parentElement.querySelector(".toDoTitle"))
+                if (response.status == 200) {       
+                    if (event.target.checked) {
+                        event.target.parentElement.parentElement.parentElement.querySelector(".toDoTitle").style.textDecoration = "line-through";
+                    } else {
+                        event.target.parentElement.parentElement.parentElement.querySelector(".toDoTitle").style.textDecoration = "none";
+                    }
+                }
+            })
+            .catch(error => {
+                console.error("Error updating todo:", error);
+            });
+    }
+</script>
+<style>
+    body {
+        width: 60%;
+        margin: auto;
+        margin-top: 50px;
+        border: 1px white solid;
+        background-color: hsl(60, 4%, 95%);
+
+    }
+</style>
+
+<body>
+    <div style="background-color:hsl(60, 14%, 99%)">
+        <form action="http://localhost:3000/api/v1/todos" method="POST" enctype="multipart/form-data">
+            <h2 style=" text-align: center;">TO DO</h2>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Add New TO-DO" aria-label="Recipient's username"
+                    aria-describedby="basic-addon2" name="title">
+                <div class="input-group-append">
+                    <button  class="btn btn-outline-secondary" type="submit" style="color: blue;">ADD TASK</button>
+                </div>
+            </div>
+        </form>
+        <div class="table">
+            <table> {{tableContent}}</table>
+        </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+</div>
+</html>
